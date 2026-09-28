@@ -1,5 +1,5 @@
 name: GPT reviewer
-description: Review a pull request with Codex and return structured findings and a merge confidence.
+description: Review a pull request with Codex and post inline findings and a merge confidence, approving on high confidence.
 
 inputs:
   openai-api-key:
@@ -18,7 +18,7 @@ inputs:
     description: Repo-relative path to project review instructions, read from the base branch so a PR cannot rewrite its own review. Optional.
     default: ''
   github-token:
-    description: Token that reads the PR's earlier review threads.
+    description: Token that reads the PR's earlier review threads and posts the review; needs pull-requests write.
     default: ${{ github.token }}
 
 outputs:
@@ -65,3 +65,13 @@ runs:
         working-directory: ${{ github.workspace }}
         prompt-file: ${{ runner.temp }}/codex-prompt.md
         output-schema-file: ${{ github.action_path }}/src/review-schema.json
+
+    - name: Post review
+      if: steps.codex.outputs.final-message != ''
+      uses: actions/github-script@v7
+      env:
+        REVIEW: ${{ steps.codex.outputs.final-message }}
+        POST_REVIEW: ${{ github.action_path }}/src/post-review.js
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: await (await import(process.env.POST_REVIEW)).default({ github, context, core })
