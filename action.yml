@@ -1,0 +1,67 @@
+name: GPT reviewer
+description: Review a pull request with Codex and return structured findings and a merge confidence.
+
+inputs:
+  openai-api-key:
+    description: OpenAI API key.
+    required: true
+  model:
+    description: Codex model.
+    default: gpt-6-luna
+  effort:
+    description: Reasoning effort.
+    default: medium
+  permission-profile:
+    description: Codex sandbox permission profile.
+    default: ':workspace'
+  instructions-file:
+    description: Repo-relative path to project review instructions, read from the base branch so a PR cannot rewrite its own review. Optional.
+    default: ''
+  github-token:
+    description: Token that reads the PR's earlier review threads.
+    default: ${{ github.token }}
+
+outputs:
+  review:
+    description: Review JSON matching review-schema.json; empty when Codex returned nothing.
+    value: ${{ steps.codex.outputs.final-message }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v5
+      with:
+        ref: refs/pull/${{ github.event.pull_request.number }}/merge
+        persist-credentials: false
+
+    - name: Fetch base and head refs
+      shell: bash
+      env:
+        PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+      run: git fetch --no-tags origin "+refs/heads/$PR_BASE_REF:refs/remotes/origin/$PR_BASE_REF" "+refs/pull/$PR_NUMBER/head"
+
+    - name: Build prompt
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        INSTRUCTIONS_FILE: ${{ inputs.instructions-file }}
+        PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        PR_TITLE: ${{ github.event.pull_request.title }}
+        PR_BODY: ${{ github.event.pull_request.body }}
+        BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      run: '"$GITHUB_ACTION_PATH/build-prompt.sh"'
+
+    - name: Run Codex
+      id: codex
+      uses: openai/codex-action@v1
+      with:
+        openai-api-key: ${{ inputs.openai-api-key }}
+        model: ${{ inputs.model }}
+        effort: ${{ inputs.effort }}
+        permission-profile: ${{ inputs.permission-profile }}
+        working-directory: ${{ github.workspace }}
+        prompt-file: ${{ runner.temp }}/codex-prompt.md
+        output-schema-file: ${{ github.action_path }}/review-schema.json

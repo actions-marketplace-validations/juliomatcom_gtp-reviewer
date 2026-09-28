@@ -1,0 +1,21 @@
+name: GPT reviewer — post
+description: Post a GPT reviewer result as a PR review, approving on high confidence.
+
+inputs:
+  review:
+    description: The `review` output of juliomatcom/gtp-reviewer.
+    required: true
+  github-token:
+    description: Token with pull-requests write.
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/github-script@v7
+      env:
+        REVIEW: ${{ inputs.review }}
+        POST_REVIEW: ${{ github.action_path }}/post-review.js
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: await (await import(process.env.POST_REVIEW)).default({ github, context, core })
