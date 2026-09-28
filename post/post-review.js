@@ -1,8 +1,8 @@
 const levels = { high: '🟢 High', medium: '🟡 Medium', low: '🔴 Low' };
-const icons = { critical: '🔴', major: '🟠', minor: '🟡' };
+const severities = { critical: 'Critical', major: 'Major', minor: 'Minor' };
 
 const comment = (finding) =>
-  `${icons[finding.severity]} **${finding.title}**\n\n${finding.body}`;
+  `**${finding.title}**\n\n${finding.body}\n\nSeverity: ${severities[finding.severity]}`;
 
 const summary = ({ findings, confidence, justification }, inline) => {
   const lines = ['## Codex review', ''];
