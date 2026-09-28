@@ -42,17 +42,14 @@ runs:
       run: git fetch --no-tags origin "+refs/heads/$PR_BASE_REF:refs/remotes/origin/$PR_BASE_REF" "+refs/pull/$PR_NUMBER/head"
 
     - name: Build prompt
-      shell: bash
+      uses: actions/github-script@v7
       env:
-        GH_TOKEN: ${{ inputs.github-token }}
         INSTRUCTIONS_FILE: ${{ inputs.instructions-file }}
-        PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
-        PR_NUMBER: ${{ github.event.pull_request.number }}
-        PR_TITLE: ${{ github.event.pull_request.title }}
-        PR_BODY: ${{ github.event.pull_request.body }}
-        BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      run: '"$GITHUB_ACTION_PATH/src/build-prompt.sh"'
+        PROMPT_FILE: ${{ runner.temp }}/codex-prompt.md
+        BUILD_PROMPT: ${{ github.action_path }}/src/build-prompt.js
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: await (await import(process.env.BUILD_PROMPT)).default({ github, context, core })
 
     - name: Run Codex
       id: codex
