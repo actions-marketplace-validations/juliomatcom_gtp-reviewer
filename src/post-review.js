@@ -4,7 +4,7 @@ const severities = { critical: 'Critical', major: 'Major', minor: 'Minor' };
 const comment = (finding) =>
   `**${finding.title}**\n\n${finding.body}\n\nSeverity: ${severities[finding.severity]}`;
 
-const summary = ({ findings, confidence, justification }, inline) => {
+const summary = ({ findings, confidence, justification, unverified }, inline) => {
   const lines = ['## Codex review', ''];
   if (findings.length === 0) lines.push('No findings.', '');
   else if (!inline) {
@@ -17,6 +17,11 @@ const summary = ({ findings, confidence, justification }, inline) => {
     );
   }
   lines.push('### Confidence', '', levels[confidence], '', justification);
+  // Confidence ignores what no one could run, so the reader must see it here.
+  if (unverified.length > 0) {
+    lines.push('', '> [!WARNING]', '> **Not verified.** Check before or right after merging:', '>');
+    lines.push(...unverified.map((item) => `> - ${item}`));
+  }
   return lines.join('\n');
 };
 

@@ -1,7 +1,7 @@
 {
   "type": "object",
   "additionalProperties": false,
-  "required": ["findings", "confidence", "justification"],
+  "required": ["findings", "confidence", "justification", "unverified"],
   "properties": {
     "findings": {
       "type": "array",
@@ -19,6 +19,7 @@
       }
     },
     "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
-    "justification": { "type": "string" }
+    "justification": { "type": "string" },
+    "unverified": { "type": "array", "items": { "type": "string" } }
   }
 }
