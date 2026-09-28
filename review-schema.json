@@ -8,13 +8,13 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["path", "line", "title", "body", "risk"],
+        "required": ["path", "line", "severity", "title", "body"],
         "properties": {
           "path": { "type": "string" },
           "line": { "type": "integer" },
+          "severity": { "type": "string", "enum": ["critical", "major", "minor"] },
           "title": { "type": "string" },
-          "body": { "type": "string" },
-          "risk": { "type": "string", "enum": ["high", "medium", "low"] }
+          "body": { "type": "string" }
         }
       }
     },
