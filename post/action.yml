@@ -15,7 +15,7 @@ runs:
     - uses: actions/github-script@v7
       env:
         REVIEW: ${{ inputs.review }}
-        POST_REVIEW: ${{ github.action_path }}/post-review.js
+        POST_REVIEW: ${{ github.action_path }}/../src/post-review.js
       with:
         github-token: ${{ inputs.github-token }}
         script: await (await import(process.env.POST_REVIEW)).default({ github, context, core })

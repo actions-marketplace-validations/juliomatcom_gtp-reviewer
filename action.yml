@@ -52,7 +52,7 @@ runs:
         PR_BODY: ${{ github.event.pull_request.body }}
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      run: '"$GITHUB_ACTION_PATH/build-prompt.sh"'
+      run: '"$GITHUB_ACTION_PATH/src/build-prompt.sh"'
 
     - name: Run Codex
       id: codex
@@ -64,4 +64,4 @@ runs:
         permission-profile: ${{ inputs.permission-profile }}
         working-directory: ${{ github.workspace }}
         prompt-file: ${{ runner.temp }}/codex-prompt.md
-        output-schema-file: ${{ github.action_path }}/review-schema.json
+        output-schema-file: ${{ github.action_path }}/src/review-schema.json

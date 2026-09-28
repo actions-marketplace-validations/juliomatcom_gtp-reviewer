@@ -2,7 +2,7 @@
 
 Codex pull request review as two composite actions:
 
-- `juliomatcom/gtp-reviewer` checks out the PR, builds the prompt and runs Codex. Output `review` is JSON matching [`review-schema.json`](review-schema.json): inline findings plus a high/medium/low merge confidence.
+- `juliomatcom/gtp-reviewer` checks out the PR, builds the prompt and runs Codex. Output `review` is JSON matching [`review-schema.json`](src/review-schema.json): inline findings plus a high/medium/low merge confidence.
 - `juliomatcom/gtp-reviewer/post` posts that result as a PR review: inline comments, an approval on high confidence, and its own earlier approval dismissed when a later push rates lower.
 
 They are separate so Codex never runs in a job holding `pull-requests: write`.
@@ -19,7 +19,7 @@ Each run feeds the PR's earlier review threads into the prompt. It only counts r
 | `model`              | `gpt-6-luna`          |                                                                                      |
 | `effort`             | `medium`              |                                                                                      |
 | `permission-profile` | `:workspace`          | Codex sandbox profile.                                                               |
-| `instructions-file`  | none                  | Repo-relative project instructions, read from the **base branch** and appended to [`review.md`](review.md). |
+| `instructions-file`  | none                  | Repo-relative project instructions, read from the **base branch** and appended to [`review.md`](src/review.md). |
 | `github-token`       | `${{ github.token }}` | Reads earlier review threads.                                                        |
 
 `juliomatcom/gtp-reviewer/post`: `review` (required), `github-token` (default `${{ github.token }}`).

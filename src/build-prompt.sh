@@ -22,7 +22,7 @@ threads() {
 }
 
 {
-  cat "$GITHUB_ACTION_PATH/review.md"
+  cat "$GITHUB_ACTION_PATH/src/review.md"
   if [ -n "$INSTRUCTIONS_FILE" ]; then
     printf '\n## Project instructions\n\n'
     # Read from the base branch: the PR checkout could rewrite its own instructions.
