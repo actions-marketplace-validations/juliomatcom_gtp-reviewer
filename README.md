@@ -55,3 +55,36 @@ jobs:
 ```
 
 To let the bot approve, the repo needs an `OPENAI_API_KEY` secret and the setting _Allow GitHub Actions to create and approve pull requests_. Without that setting, the review is posted as a comment instead.
+
+## Example output
+
+A PR with one minor finding gets 🟢 High, so the action approves it. It posts the finding as an inline comment on `src/cache.ts:42`:
+
+```markdown
+**Expired entries are never evicted.**
+
+`get` returns `undefined` for an expired key but leaves it in the map, so memory grows with every unique key. Delete the entry when it is found expired.
+
+Severity: Minor
+```
+
+And this summary as the review body:
+
+```markdown
+## Codex review
+
+### Confidence
+
+🟢 High
+
+The new cache is covered by unit tests for hits, misses and expiry; the only finding is minor.
+
+> [!WARNING]
+> **Not verified.** Check before or right after merging:
+>
+> - The cache is not exercised under real traffic; watch memory after deploy.
+
+<sub>gpt-6-luna (medium) · 120.4k input, 98.1k cached · 5.2k output · ≈ $0.0058</sub>
+```
+
+With no findings, the summary says `No findings.` above the confidence. When an inline comment is rejected, for example because its line is outside the diff, each finding is listed in the summary instead: `` - `src/cache.ts:42` **Expired entries are never evicted.** — … — Severity: Minor ``.
