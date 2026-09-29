@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate action.yml
+        run: |
+          python3 - <<'PY'
+          import yaml
+          a = yaml.safe_load(open("action.yml"))
+          missing = [k for k in ("name", "description", "runs") if k not in a]
+          assert not missing, f"action.yml missing keys: {missing}"
+          PY
+
+      - name: Lint JS and JSON
+        run: |
+          npm ci --no-audit --no-fund
+          npx eslint .
