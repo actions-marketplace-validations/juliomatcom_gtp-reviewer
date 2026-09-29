@@ -2,6 +2,9 @@
   "name": "gtp-reviewer",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "lint": "eslint ."
   },
