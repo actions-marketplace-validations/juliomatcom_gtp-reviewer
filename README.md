@@ -93,4 +93,4 @@ With no findings, the summary says `No findings.` above the confidence. When an 
 
 ## License
 
-MIT. Copyright (c) 2026 Julio Cesar Marti.
+MIT. Copyright (c) 2026 Julio Cesar Martin.
