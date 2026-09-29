@@ -1,5 +1,7 @@
 # gtp-reviewer
 
+[![Release](https://github.com/juliomatcom/gtp-reviewer/actions/workflows/release.yml/badge.svg)](https://github.com/juliomatcom/gtp-reviewer/actions/workflows/release.yml)
+
 A composite action that reviews a pull request with Codex and posts the result:
 
 - Inline findings, each ending with its severity (Critical, Major or Minor).
@@ -88,3 +90,7 @@ One or two sentences grounded in the findings and test coverage.
 ```
 
 With no findings, the summary says `No findings.` above the confidence. When an inline comment is rejected, for example because its line is outside the diff, each finding is listed in the summary instead: `` - `path/to/file.ts:42` **Short title of the defect.** — … — Severity: Minor ``.
+
+## License
+
+MIT. Copyright (c) 2026 Julio Cesar Martin.

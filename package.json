@@ -1,0 +1,19 @@
+{
+  "name": "gtp-reviewer",
+  "private": true,
+  "author": "Julio Cesar Martin",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@eslint/json": "^0.13.0",
+    "eslint": "^9.0.0",
+    "globals": "^16.0.0"
+  }
+}
