@@ -1,6 +1,8 @@
 {
   "name": "gtp-reviewer",
   "private": true,
+  "author": "Julio Cesar Marti",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": "24.x"
