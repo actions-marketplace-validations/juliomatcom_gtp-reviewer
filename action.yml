@@ -33,6 +33,18 @@ outputs:
 runs:
   using: composite
   steps:
+    # An unset or unreachable secret expands to an empty string, and codex-action then only
+    # times out reading the proxy's server info file instead of naming the cause.
+    - name: Check OpenAI API key
+      shell: bash
+      env:
+        OPENAI_API_KEY: ${{ inputs.openai-api-key }}
+      run: |
+        if [ -z "$OPENAI_API_KEY" ]; then
+          echo "::error title=openai-api-key is empty::Check that the secret passed as openai-api-key exists and that this workflow can read it."
+          exit 1
+        fi
+
     - uses: actions/checkout@v5
       with:
         ref: refs/pull/${{ github.event.pull_request.number }}/merge

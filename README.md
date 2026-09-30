@@ -50,13 +50,13 @@ jobs:
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - uses: juliomatcom/gtp-reviewer@v0.2.1
+      - uses: juliomatcom/gtp-reviewer@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           instructions-file: .github/codex/review.md
 ```
 
-To let the bot approve, the repo needs an `OPENAI_API_KEY` secret and the setting _Allow GitHub Actions to create and approve pull requests_. Without that setting, the review is posted as a comment instead.
+The repo needs an `OPENAI_API_KEY` secret. On the GitHub Free plan, organization secrets do not reach private repos, so add it as a repository secret there. To let the bot approve, the repo also needs the setting _Allow GitHub Actions to create and approve pull requests_. Without that setting, the review is posted as a comment instead.
 
 ## Example output
 
