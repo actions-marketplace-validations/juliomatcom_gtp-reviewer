@@ -23,7 +23,7 @@ The review is also exposed as the `review` output: JSON matching [`review-schema
 | `effort`             | `medium`              |                                                                                                                 |
 | `permission-profile` | `:workspace`          | Codex sandbox profile.                                                                                          |
 | `instructions-file`  | none                  | Repo-relative project instructions, read from the **base branch** and appended to [`review.md`](src/review.md). |
-| `github-token`       | `${{ github.token }}` | Reads earlier review threads and posts the review; needs `pull-requests: write`.                                |
+| `github-token`       | `${{ github.token }}` | Fetches the base and head refs, reads earlier review threads and posts the review; needs `pull-requests: write`. |
 
 ## Usage
 
@@ -50,7 +50,7 @@ jobs:
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - uses: juliomatcom/gtp-reviewer@v0.1.0
+      - uses: juliomatcom/gtp-reviewer@v0.2.1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           instructions-file: .github/codex/review.md
